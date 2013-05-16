@@ -1,4 +1,7 @@
 require 'piper/log'
 require 'piper/version'
+require 'piper/request'
+require 'piper/response'
+require 'piper/env'
 require 'piper/middleware'
 require 'piper/client'

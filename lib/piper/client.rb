@@ -1,6 +1,6 @@
 module Piper
   module Client
   
-    autoload :BareFaradayClient, 'piper/client/bare_faraday_client'
+    autoload :FaradayClient, 'piper/client/faraday_client'
   end
 end
