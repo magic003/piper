@@ -25,8 +25,15 @@ class FaradayClientTest < Test::Unit::TestCase
   end
 
   def test_call
+    env = Piper::Env.new
+
+    @client.call(env)
+    assert_nil env.response
+
+    ######
+
     req = Piper::Request.new(:get, '/foo.json') do |r|
-      r.params['q'] = 'piper'
+      r.queries['q'] = 'piper'
     end
     env = Piper::Env.new do |e|
       e.request = req
@@ -41,7 +48,7 @@ class FaradayClientTest < Test::Unit::TestCase
     ######
     
     req = Piper::Request.new(:get, '/foo.xml') do |r|
-      r.params['q'] = 'piper'
+      r.queries['q'] = 'piper'
     end
     env = Piper::Env.new do |e|
       e.request = req

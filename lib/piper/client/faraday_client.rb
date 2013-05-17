@@ -2,6 +2,7 @@ require 'faraday'
 
 module Piper ; module Client
   class FaradayClient < Piper::Middleware
+    include Log
 
     def initialize(app)
       super(app)
@@ -12,7 +13,9 @@ module Piper ; module Client
 
     def call(env)
       request = env.request
-      if request
+      if request.nil?
+        logger.warn 'Skip because request is not set.'
+      else
         faraday_response = @conn.run_request(request.method, request.url, 
                                         request.body, request.headers)
         res = env.response || Piper::Response.new
