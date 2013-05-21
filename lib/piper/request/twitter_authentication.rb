@@ -3,7 +3,7 @@ require 'openssl'
 require 'base64'
 
 module Piper 
-  class TwitterAuthentication < Piper::Middleware
+  class Request::TwitterAuthentication < Piper::Middleware
     include Log
 
     CONSUMER_KEY = 'consumer_key'

@@ -5,5 +5,6 @@ module Piper
     end
   end
   
-  autoload :TwitterAuthentication, 'piper/request/twitter_authentication'
+  # Autoload the middlewares
+  Request.autoload :TwitterAuthentication, 'piper/request/twitter_authentication'
 end

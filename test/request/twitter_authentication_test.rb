@@ -5,7 +5,7 @@ class TwitterAuthenticationTest < Test::Unit::TestCase
   BASE_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
 
   def setup
-    @app = Piper::TwitterAuthentication.new(Proc.new {})
+    @app = Piper::Request::TwitterAuthentication.new(Proc.new {})
   end
 
   def test_call
@@ -25,13 +25,13 @@ class TwitterAuthenticationTest < Test::Unit::TestCase
       @app.call(env)
     end
 
-    env.credentials[Piper::TwitterAuthentication::CONSUMER_KEY] = 'xxx'
+    env.credentials[Piper::Request::TwitterAuthentication::CONSUMER_KEY] = 'xxx'
 
     assert_raise RuntimeError do
       @app.call(env)
     end
 
-    env.credentials[Piper::TwitterAuthentication::CONSUMER_SECRET] =
+    env.credentials[Piper::Request::TwitterAuthentication::CONSUMER_SECRET] =
       'xxxx'
 
     assert_raise RuntimeError do
@@ -40,8 +40,8 @@ class TwitterAuthenticationTest < Test::Unit::TestCase
 
     ######
 
-    env.credentials[Piper::TwitterAuthentication::TOKEN] = 'xxx'
-    env.credentials[Piper::TwitterAuthentication::TOKEN_SECRET] = 'xxx'
+    env.credentials[Piper::Request::TwitterAuthentication::TOKEN] = 'xxx'
+    env.credentials[Piper::Request::TwitterAuthentication::TOKEN_SECRET] = 'xxx'
 
     @app.call(env)
     assert_not_nil env.request.headers['Authorization']
