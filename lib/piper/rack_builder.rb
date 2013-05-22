@@ -2,7 +2,7 @@ module Piper
 
   class RackBuilder
 
-    INNER_APP = Proc.new
+    INNER_APP = Proc.new {}
 
     def initialize
       @middlewares = []
@@ -19,7 +19,7 @@ module Piper
 
     def use(klass, *args, &block)
       raise_if_locked
-      @middlewares << Proc.new { |app| klass.new(app, args, &block) }
+      @middlewares << Proc.new { |app| klass.new(app, *args, &block) }
     end
 
     def app
