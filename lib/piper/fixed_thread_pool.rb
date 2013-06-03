@@ -36,8 +36,11 @@ module Piper
             if @job.nil?
               Thread.stop
             else
-              @job.call
-              done
+              begin
+                @job.call
+              ensure
+                done
+              end
             end
           end
         end
@@ -48,8 +51,8 @@ module Piper
       # @param [Object] an object which responds to #call, can be a block,
       #   a proc, or a lambda
       # @yield [] a block containing the code for the job
-      def execute(&block)
-        @job = block
+      def execute(job=nil)
+        @job = job || Proc.new
         @thread.run
       end
 
@@ -83,14 +86,14 @@ module Piper
     # @yield [nil] the block specified the code to be executed
     # @return [Boolean] True if there is an idle thread to run it,
     #   otherwise false.
-    def execute(&block)
+    def execute(job=nil)
       @mutex.synchronize do
         w = @ready.pop
         if w.nil?
           false
         else
           @busy << w
-          w.execute(&block)
+          w.execute(job || Proc.new)
           true
         end
       end
