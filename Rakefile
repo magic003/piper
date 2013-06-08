@@ -8,22 +8,6 @@ task :default => [:test]
 CLOBBER.include('.yardoc','doc','piper-*.gem')
 
 ## Unit tests tasks
-namespace :test do
-  desc "Run unit tests without internet accessing"
-  Rake::TestTask.new("nointernet") do |t|
-    t.test_files = FileList['test/dispatcher/test_*.rb', 'test/interface/test_*.rb', 'test/linkstore/test_*.rb', 'test/thread_pool/test_*.rb', 'test/test_db_helper.rb']
-    t.verbose = true
-    t.warning = true
-  end
-
-  desc "Run unit tests with internet accessing only"
-  Rake::TestTask.new("internet") do |t|
-    t.test_files = FileList['test/clients/test_*.rb', 'test/tasks/test_*.rb']
-    t.verbose = true
-    t.warning = true
-  end
-end
-
 desc "Run all unit tests"
 Rake::TestTask.new("test") do |t|
   t.pattern = 'test/**/*_test.rb'
