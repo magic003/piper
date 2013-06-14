@@ -7,4 +7,5 @@ module Piper
   
   # Autoload the middlewares
   Request.autoload :TwitterAuthentication, 'piper/request/twitter_authentication'
+  Request.autoload :Retry, 'piper/request/retry'
 end
