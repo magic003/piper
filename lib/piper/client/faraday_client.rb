@@ -12,18 +12,18 @@ module Piper ; module Client
     end
 
     def call(env)
-      request = env.request
+      request = env['piper.request']
       if request.nil?
         logger.warn 'Skip because request is not set.'
       else
         faraday_response = @conn.run_request(request.method, request.url, 
                                         request.body, request.headers)
-        res = env.response || Piper::Response.new
+        res = env['piper.response'] || Piper::Response.new
         res.status = faraday_response.status
         res.headers.merge!(faraday_response.headers)
         res.body = faraday_response.body
 
-        env.response = res
+        env['piper.response'] = res
       end
       @app.call(env)
     end

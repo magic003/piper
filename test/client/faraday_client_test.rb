@@ -25,22 +25,20 @@ class FaradayClientTest < Test::Unit::TestCase
   end
 
   def test_call
-    env = Piper::Env.new
+    env = {}
 
     @client.call(env)
-    assert_nil env.response
+    assert_nil env['piper.response']
 
     ######
 
     req = Piper::Request.new(:get, '/foo.json') do |r|
       r.queries['q'] = 'piper'
     end
-    env = Piper::Env.new do |e|
-      e.request = req
-    end
+    env = { 'piper.request' => req }
 
     @client.call(env)
-    res = env.response
+    res = env['piper.response']
     assert_equal 200, res.status
     assert_equal 'application/json', res.headers['Content-Type']
     assert_equal '{"foo" : "piper"}', res.body
@@ -50,12 +48,10 @@ class FaradayClientTest < Test::Unit::TestCase
     req = Piper::Request.new(:get, '/foo.xml') do |r|
       r.queries['q'] = 'piper'
     end
-    env = Piper::Env.new do |e|
-      e.request = req
-    end
+    env = { 'piper.request' => req }
 
     @client.call(env)
-    res = env.response
+    res = env['piper.response']
     assert_equal 200, res.status
     assert_equal 'text/xml', res.headers['Content-Type']
     assert_equal '<foo>piper</foo>', res.body
@@ -65,12 +61,10 @@ class FaradayClientTest < Test::Unit::TestCase
     req = Piper::Request.new(:post, '/bar') do |r|
       r.body = 'name=piper&age=1'
     end
-    env = Piper::Env.new do |e|
-      e.request = req
-    end
+    env = { 'piper.request' => req }
 
     @client.call(env)
-    res = env.response
+    res = env['piper.response']
     assert_equal 200, res.status
     body = '{"name": "piper", "age": 1}'
     assert_equal body.size, res.headers['Content-Length']
@@ -79,12 +73,10 @@ class FaradayClientTest < Test::Unit::TestCase
     ######
     
     req = Piper::Request.new(:post, '/bar')
-    env = Piper::Env.new do |e|
-      e.request = req
-    end
+    env = { 'piper.request' => req }
 
     @client.call(env)
-    res = env.response
+    res = env['piper.response']
     assert_equal 400, res.status
   end
 end

@@ -9,29 +9,28 @@ class TwitterAuthenticationTest < Test::Unit::TestCase
   end
 
   def test_call
-    env = Piper::Env.new
+    env = {}
 
     @app.call(env)
-    assert_nil env.response
+    assert_nil env['piper.response']
 
     ######
     req = Piper::Request.new(:get, BASE_URL)
 
-    env = Piper::Env.new do |e|
-      e.request = req
-    end
+    env = { 'piper.request' => req }
     
     assert_raise RuntimeError do
       @app.call(env)
     end
 
-    env.credentials[Piper::Request::TwitterAuthentication::CONSUMER_KEY] = 'xxx'
+    env['piper.credentials'] = {} if env['piper.credentials'].nil?
+    env['piper.credentials'][Piper::Request::TwitterAuthentication::CONSUMER_KEY] = 'xxx'
 
     assert_raise RuntimeError do
       @app.call(env)
     end
 
-    env.credentials[Piper::Request::TwitterAuthentication::CONSUMER_SECRET] =
+    env['piper.credentials'][Piper::Request::TwitterAuthentication::CONSUMER_SECRET] =
       'xxxx'
 
     assert_raise RuntimeError do
@@ -40,18 +39,18 @@ class TwitterAuthenticationTest < Test::Unit::TestCase
 
     ######
 
-    env.credentials[Piper::Request::TwitterAuthentication::TOKEN] = 'xxx'
-    env.credentials[Piper::Request::TwitterAuthentication::TOKEN_SECRET] = 'xxx'
+    env['piper.credentials'][Piper::Request::TwitterAuthentication::TOKEN] = 'xxx'
+    env['piper.credentials'][Piper::Request::TwitterAuthentication::TOKEN_SECRET] = 'xxx'
 
     @app.call(env)
-    assert_not_nil env.request.headers['Authorization']
+    assert_not_nil env['piper.request'].headers['Authorization']
 
     ######
     
-    env.request.headers = {}
-    env.request.queries['count'] = 200
+    env['piper.request'].headers = {}
+    env['piper.request'].queries['count'] = 200
 
     @app.call(env)
-    assert_not_nil env.request.headers['Authorization']
+    assert_not_nil env['piper.request'].headers['Authorization']
   end
 end

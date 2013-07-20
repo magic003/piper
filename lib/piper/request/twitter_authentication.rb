@@ -18,12 +18,12 @@ module Piper
     end
 
     def call(env)
-      request = env.request
+      request = env['piper.request']
       error = validate_credentials(env)
       if request.nil?
         logger.warn 'Skip because request is not set.'
       elsif error.nil?
-        creds = env.credentials
+        creds = env['piper.credentials']
         consumer_key = creds[CONSUMER_KEY] || @consumer_key
         consumer_secret = creds[CONSUMER_SECRET] || @consumer_secret
         unless request.headers['Authorization'].nil?
@@ -47,7 +47,7 @@ module Piper
     private
 
     def validate_credentials(env)
-      creds = env.credentials
+      creds = env['piper.credentials']
       error = nil
       if creds.nil?
         error = 'Credentials are not set in env'
